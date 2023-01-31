@@ -22,7 +22,6 @@ app.layout = dbc.Container([
                       placeholder='Type a question...', type='text'),
             dbc.Button("Ask", color="primary", id='ask-button')], width='auto')
     ], align='end', justify='left'),
-    html.Br(),
     html.Div(id='chatbot-answer')]
 )
 
@@ -36,38 +35,18 @@ app.layout = dbc.Container([
 )
 def update_output_div(user_text, click):
     if click:
-        # clean input text
-        # feed to openai chat gpt api
+        # feed text to openai chat gpt api
         openai_response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=generate_prompt(user_text),
-            temperature=0.6
+            prompt=f"I am a highly intelligent question answering bot. If you ask me a question that is rooted in truth, I will give you the answer. If you ask me a question that is nonsense, trickery, or has no clear answer, I will respond with \"Unknown\".\n\nQ: What is human life expectancy in the United States?\nA: Human life expectancy in the United States is 78 years.\n\nQ: Who was president of the United States in 1955?\nA: Dwight D. Eisenhower was president of the United States in 1955.\n\nQ: Which party did he belong to?\nA: He belonged to the Republican Party.\n\nQ: What is the square root of banana?\nA: Unknown\n\nQ: How does a telescope work?\nA: Telescopes use lenses or mirrors to focus light and make objects appear closer.\n\nQ: Where were the 1992 Olympics held?\nA: The 1992 Olympics were held in Barcelona, Spain.\n\nQ: How many squigs are in a bonk?\nA: Unknown\n\nQ: {user_text}?\nA:",
+            temperature=0,
+            max_tokens=100,
+            top_p=1,
+            frequency_penalty=0.0,
+            presence_penalty=0.0,
+            stop=["\n"]
         )
-        # clean response
         return f"Chatbot: {openai_response['choices'][0].text}"
-
-# helper functions
-
-
-def generate_prompt(user_question):
-    return f"""Act like you are a customer service agent at a IT company.
-    Respond as if you were talking to a 3rd grader. Please write at least 3 sentences and include step by step instructions.
-    
-    Example question: How do I reset my password?
-    Answer:
-    1. Go to the website
-    2. Click on the login button
-    3. Click on the forgot password link
-
-    Example question: How do I fix my computer?
-    Answer:
-    1. Turn off your computer
-    2. Unplug the power cord
-    3. Wait 30 seconds
-    4. Plug the power cord back in
-    
-    My question is: {user_question}?
-    Answer:"""
 
 
 if __name__ == '__main__':
