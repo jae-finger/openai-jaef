@@ -30,8 +30,8 @@ app.layout = dbc.Container([
 
 @ app.callback(
     Output(component_id='chatbot-answer', component_property='children'),
-    State(component_id='text-input', component_property='value'),
-    Input(component_id='ask-button', component_property='n_clicks')
+    Input(component_id='ask-button', component_property='n_clicks'),
+    State(component_id='text-input', component_property='value')
 )
 def update_output_div(user_text, click):
     if click:
