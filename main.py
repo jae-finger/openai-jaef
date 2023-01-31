@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 from dotenv import load_dotenv
 import os
@@ -30,7 +30,7 @@ app.layout = dbc.Container([
 
 @ app.callback(
     Output(component_id='chatbot-answer', component_property='children'),
-    Input(component_id='text-input', component_property='value'),
+    State(component_id='text-input', component_property='value'),
     Input(component_id='ask-button', component_property='n_clicks')
 )
 def update_output_div(user_text, click):
